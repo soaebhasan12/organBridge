@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - OrganBridge{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Welcome, {{ user.username }}! 👋</h1>
+    <p class="text-gray-500 mt-1">{{ user.get_user_type_display }} Dashboard</p>
+</div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-xl p-5 shadow-sm border">
+        <p class="text-sm text-gray-500">Blood Type</p>
+        <p class="text-2xl font-bold text-red-600">{{ user.blood_type|default:"N/A" }}</p>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border">
+        <p class="text-sm text-gray-500">User Type</p>
+        <p class="text-2xl font-bold text-blue-600">{{ user.get_user_type_display }}</p>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border">
+        <p class="text-sm text-gray-500">City</p>
+        <p class="text-2xl font-bold text-green-600">{{ user.city|default:"N/A" }}</p>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border">
+        <p class="text-sm text-gray-500">Age</p>
+        <p class="text-2xl font-bold text-purple-600">{{ user.age|default:"N/A" }}</p>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {% if user.is_recipient %}
+    <a href="{% url 'matches:find_matches' %}"
+       class="bg-red-600 text-white rounded-xl p-6 hover:bg-red-700 transition">
+        <p class="text-xl font-bold">🔍 Find Matches</p>
+        <p class="text-red-100 text-sm mt-1">Find compatible organ donors</p>
+    </a>
+    {% endif %}
+    <a href="{% url 'matches:my_matches' %}"
+       class="bg-blue-600 text-white rounded-xl p-6 hover:bg-blue-700 transition">
+        <p class="text-xl font-bold">💌 My Matches</p>
+        <p class="text-blue-100 text-sm mt-1">View your match history</p>
+    </a>
+    <a href="{% url 'accounts:account' %}"
+       class="bg-gray-100 text-gray-800 rounded-xl p-6 hover:bg-gray-200 transition">
+        <p class="text-xl font-bold">👤 My Account</p>
+        <p class="text-gray-500 text-sm mt-1">View and edit your profile</p>
+    </a>
+    <a href="{% url 'bias_dashboard:bias_overview' %}"
+       class="bg-purple-600 text-white rounded-xl p-6 hover:bg-purple-700 transition">
+        <p class="text-xl font-bold">📊 Bias Dashboard</p>
+        <p class="text-purple-100 text-sm mt-1">AI fairness & transparency</p>
+    </a>
+</div>
+{% endblock %}
