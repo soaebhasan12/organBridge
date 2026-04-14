@@ -1,0 +1,75 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Media & static files (optional depending on setup)
+# media/
+# staticfiles/
+
+# Environment variables
+.env
+.env.*
+*.env
+
+# Virtual environment
+venv/
+
+# VS Code / IDE settings
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+
+# pytest / coverage reports
+.coverage
+htmlcov/
+.pytest_cache/
+
+# mypy / type checking
+.mypy_cache/
+
+# Celery beat schedule
+celerybeat-schedule
+
+# Sphinx docs
+docs/_build/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# pipenv / poetry
+Pipfile.lock
+poetry.lock
+
+# Logs
+*.log
+
+# Backup files
+*.bak
+*.swp
+
+
+# ML trained model files (large binary files)
+ml_model/trained_models/*.pkl
+ml_model/trained_models/*.npy
+
+# Static files collected
+staticfiles/
