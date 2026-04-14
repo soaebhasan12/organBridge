@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}OrganBridge - AI Powered Organ Matching{% endblock %}
+
+{% block content %}
+<div class="text-center py-16">
+    <h1 class="text-5xl font-bold text-gray-900 mb-4">
+        🫀 OrganBridge
+    </h1>
+    <p class="text-xl text-gray-600 mb-8">
+        AI-Powered Organ Matching Platform — Smarter, Fairer, Transparent
+    </p>
+    <div class="flex justify-center gap-4">
+        <a href="{% url 'accounts:register' %}" 
+           class="bg-red-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-red-700">
+            Get Started
+        </a>
+        <a href="{% url 'accounts:login' %}" 
+           class="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-medium hover:bg-gray-50">
+            Login
+        </a>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
+    <div class="bg-white rounded-xl p-6 text-center shadow-sm border">
+        <p class="text-3xl font-bold text-red-600">900+</p>
+        <p class="text-gray-500 text-sm mt-1">Successful Matches</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 text-center shadow-sm border">
+        <p class="text-3xl font-bold text-blue-600">95%</p>
+        <p class="text-gray-500 text-sm mt-1">Accuracy Rate</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 text-center shadow-sm border">
+        <p class="text-3xl font-bold text-green-600">15+</p>
+        <p class="text-gray-500 text-sm mt-1">Match Factors</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 text-center shadow-sm border">
+        <p class="text-3xl font-bold text-purple-600">24/7</p>
+        <p class="text-gray-500 text-sm mt-1">Available</p>
+    </div>
+</div>
+{% endblock %}
