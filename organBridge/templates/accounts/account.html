@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}My Account - OrganBridge{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-xl shadow-sm border p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">My Account</h2>
+        <div class="space-y-3">
+            <div class="flex justify-between py-2 border-b">
+                <span class="text-gray-500">Username</span>
+                <span class="font-medium">{{ user.username }}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b">
+                <span class="text-gray-500">Email</span>
+                <span class="font-medium">{{ user.email }}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b">
+                <span class="text-gray-500">User Type</span>
+                <span class="font-medium">{{ user.get_user_type_display }}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b">
+                <span class="text-gray-500">Blood Type</span>
+                <span class="font-medium">{{ user.blood_type|default:"Not set" }}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b">
+                <span class="text-gray-500">City</span>
+                <span class="font-medium">{{ user.city|default:"Not set" }}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b">
+                <span class="text-gray-500">Age</span>
+                <span class="font-medium">{{ user.age|default:"Not set" }}</span>
+            </div>
+        </div>
+        <a href="{% url 'profiles:profile_dashboard' %}"
+           class="mt-6 block text-center bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}
