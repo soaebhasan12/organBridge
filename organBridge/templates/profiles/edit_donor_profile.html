@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Donor Profile - OrganBridge{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white rounded-xl shadow-sm border p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">✏️ Edit Donor Profile</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Organs Willing to Donate</label>
+                <div class="grid grid-cols-3 gap-2">
+                    {% for value, label in form.organs_donating.field.choices %}
+                    <label class="flex items-center gap-2 p-2 border rounded-lg cursor-pointer hover:bg-blue-50">
+                        <input type="checkbox" name="organs_donating" value="{{ value }}"
+                               {% if value in form.instance.organs_donating %}checked{% endif %}
+                               class="rounded text-blue-600">
+                        <span class="text-sm">{{ label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Health Status</label>
+                    {{ form.health_status }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Smoking Status</label>
+                    {{ form.smoking_status }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Alcohol Use</label>
+                    {{ form.alcohol_use }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Height (cm)</label>
+                    {{ form.height }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
+                    {{ form.weight }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Avg Sleep (hours)</label>
+                    {{ form.avg_sleep }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Medical Checkup</label>
+                    {{ form.last_medical_checkup }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Max Travel Distance (km)</label>
+                    {{ form.max_travel_distance }}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Medical History</label>
+                {{ form.medical_history }}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Preferred Hospital</label>
+                    {{ form.preferred_hospital }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Insurance Provider</label>
+                    {{ form.insurance_provider }}
+                </div>
+            </div>
+
+            <div class="flex gap-4 mb-6">
+                <label class="flex items-center gap-2">
+                    {{ form.drug_use }}
+                    <span class="text-sm text-gray-700">History of drug use</span>
+                </label>
+                <label class="flex items-center gap-2">
+                    {{ form.willing_to_travel }}
+                    <span class="text-sm text-gray-700">Willing to travel</span>
+                </label>
+                <label class="flex items-center gap-2">
+                    {{ form.is_available }}
+                    <span class="text-sm text-gray-700">Currently available</span>
+                </label>
+            </div>
+
+            <div class="flex gap-3">
+                <button type="submit"
+                    class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700">
+                    Save Changes
+                </button>
+                <a href="{% url 'profiles:donor_dashboard' %}"
+                   class="flex-1 text-center border border-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-50">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

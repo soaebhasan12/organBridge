@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Donor Dashboard - OrganBridge{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Welcome, {{ request.user.username }}! 🫀</h1>
+    <p class="text-gray-500 mt-1">Donor Dashboard</p>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-xl p-5 shadow-sm border">
+        <p class="text-sm text-gray-500">Blood Type</p>
+        <p class="text-2xl font-bold text-red-600">{{ request.user.blood_type|default:"N/A" }}</p>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border">
+        <p class="text-sm text-gray-500">Organs Donating</p>
+        <p class="text-2xl font-bold text-blue-600">{{ organs_count }}</p>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border">
+        <p class="text-sm text-gray-500">Health Status</p>
+        <p class="text-2xl font-bold text-green-600">{{ donor.health_status|title }}</p>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border">
+        <p class="text-sm text-gray-500">Available</p>
+        <p class="text-2xl font-bold text-purple-600">{% if donor.is_available %}Yes{% else %}No{% endif %}</p>
+    </div>
+</div>
+
+<!-- Organs List -->
+<div class="bg-white rounded-xl shadow-sm border p-6 mb-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Organs Willing to Donate</h2>
+    <div class="flex flex-wrap gap-2">
+        {% for organ in donor.organs_donating %}
+        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+            {{ organ|title }}
+        </span>
+        {% empty %}
+        <p class="text-gray-400">No organs listed.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <a href="{% url 'profiles:edit_profile' %}"
+       class="bg-blue-600 text-white rounded-xl p-6 hover:bg-blue-700 transition">
+        <p class="text-lg font-bold">✏️ Edit Profile</p>
+        <p class="text-blue-100 text-sm mt-1">Update your medical info</p>
+    </a>
+    <a href="{% url 'matches:my_matches' %}"
+       class="bg-green-600 text-white rounded-xl p-6 hover:bg-green-700 transition">
+        <p class="text-lg font-bold">💌 My Matches</p>
+        <p class="text-green-100 text-sm mt-1">View match requests</p>
+    </a>
+    <a href="{% url 'bias_dashboard:bias_overview' %}"
+       class="bg-purple-600 text-white rounded-xl p-6 hover:bg-purple-700 transition">
+        <p class="text-lg font-bold">📊 Bias Dashboard</p>
+        <p class="text-purple-100 text-sm mt-1">AI fairness report</p>
+    </a>
+</div>
+{% endblock %}
