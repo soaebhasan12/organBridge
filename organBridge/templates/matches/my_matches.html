@@ -3,8 +3,94 @@
 {% block title %}My Matches - OrganBridge{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold text-gray-900 mb-6">My Matches</h1>
-<div class="bg-white rounded-xl shadow-sm border p-8 text-center text-gray-500">
-    No matches yet.
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">💌 My Matches</h1>
+    <p class="text-gray-500 mt-1">Your match history and status</p>
 </div>
+
+{% if matches %}
+<div class="space-y-4">
+    {% for match in matches %}
+    <div class="bg-white rounded-xl shadow-sm border p-6">
+        <div class="flex justify-between items-center">
+
+            <!-- Match Info -->
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg">
+                    {% if user_type == 'donor' %}
+                        {{ match.recipient.username|first|upper }}
+                    {% else %}
+                        {{ match.donor.username|first|upper }}
+                    {% endif %}
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-900">
+                        {% if user_type == 'donor' %}
+                            Recipient: {{ match.recipient.username }}
+                        {% else %}
+                            Donor: {{ match.donor.username }}
+                        {% endif %}
+                    </p>
+                    <div class="flex flex-wrap gap-1 mt-1">
+                        {% for organ in match.organs_matched %}
+                        <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs">
+                            {{ organ|title }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score + Status -->
+            <div class="flex items-center gap-4">
+                <div class="text-center">
+                    <p class="text-2xl font-bold
+                        {% if match.match_score >= 80 %}text-green-600
+                        {% elif match.match_score >= 60 %}text-yellow-600
+                        {% else %}text-red-600{% endif %}">
+                        {{ match.match_score|floatformat:0 }}%
+                    </p>
+                    <p class="text-xs text-gray-500">Score</p>
+                </div>
+
+                <span class="px-3 py-1 rounded-full text-sm font-medium
+                    {% if match.status == 'accepted' %}bg-green-100 text-green-700
+                    {% elif match.status == 'rejected' %}bg-red-100 text-red-700
+                    {% elif match.status == 'expired' %}bg-gray-100 text-gray-700
+                    {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                    {{ match.status|title }}
+                </span>
+
+                {% if match.status == 'pending' %}
+                <div class="flex gap-2">
+                    <a href="{% url 'matches:update_match_status' match.id 'accepted' %}"
+                       class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700">
+                        Accept
+                    </a>
+                    <a href="{% url 'matches:update_match_status' match.id 'rejected' %}"
+                       class="bg-red-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-700">
+                        Reject
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<div class="bg-white rounded-xl shadow-sm border p-12 text-center">
+    <p class="text-5xl mb-4">💌</p>
+    <p class="text-gray-500">No matches yet.</p>
+    {% if user_type == 'recipient' %}
+    <a href="{% url 'matches:find_matches' %}"
+       class="mt-4 inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700">
+        Find Matches
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
 {% endblock %}
