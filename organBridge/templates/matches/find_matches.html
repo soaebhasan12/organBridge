@@ -16,66 +16,75 @@
 {% elif matches %}
 <p class="text-gray-500 mb-6">Found <strong>{{ total }}</strong> compatible donors</p>
 
+
 <div class="space-y-4">
     {% for match in matches %}
     <div class="bg-white rounded-xl shadow-sm border p-6">
-        <div class="flex justify-between items-start">
-
+        <div class="flex justify-between items-start flex-wrap gap-4">
             <!-- Donor Info -->
-            <div class="flex-1">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg">
-                        {{ match.donor_user.username|first|upper }}
+            <div class="flex-1 min-w-0">
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg">
+                            {{ match.donor_user.username|first|upper }}
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-900">{{ match.donor_user.username }}</p>
+                            <p class="text-sm text-gray-500">{{ match.donor_user.city|default:"Location N/A" }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="font-semibold text-gray-900">{{ match.donor_user.username }}</p>
-                        <p class="text-sm text-gray-500">{{ match.donor_user.city|default:"Location N/A" }}</p>
+
+                    <!-- Details -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+                        <div class="bg-gray-50 rounded-lg p-2 text-center">
+                            <p class="text-xs text-gray-500">Blood Type</p>
+                            <p class="font-bold text-red-600">{{ match.donor_user.blood_type|default:"N/A" }}</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-2 text-center">
+                            <p class="text-xs text-gray-500">Age</p>
+                            <p class="font-bold text-gray-700">{{ match.donor_user.age|default:"N/A" }}</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-2 text-center">
+                            <p class="text-xs text-gray-500">Health</p>
+                            <p class="font-bold text-green-600">{{ match.donor.health_status|title }}</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-2 text-center">
+                            <p class="text-xs text-gray-500">Compatible</p>
+                            <p class="font-bold {% if match.blood_compatible %}text-green-600{% else %}text-red-600{% endif %}">
+                                {% if match.blood_compatible %}✅ Yes{% else %}❌ No{% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Organs Matched -->
+                    <div class="flex flex-wrap gap-2">
+                        {% for organ in match.organs_matched %}
+                        <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
+                            {{ organ|title }}
+                        </span>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <!-- Details -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-                    <div class="bg-gray-50 rounded-lg p-2 text-center">
-                        <p class="text-xs text-gray-500">Blood Type</p>
-                        <p class="font-bold text-red-600">{{ match.donor_user.blood_type|default:"N/A" }}</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-2 text-center">
-                        <p class="text-xs text-gray-500">Age</p>
-                        <p class="font-bold text-gray-700">{{ match.donor_user.age|default:"N/A" }}</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-2 text-center">
-                        <p class="text-xs text-gray-500">Health</p>
-                        <p class="font-bold text-green-600">{{ match.donor.health_status|title }}</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-2 text-center">
-                        <p class="text-xs text-gray-500">Compatible</p>
-                        <p class="font-bold {% if match.blood_compatible %}text-green-600{% else %}text-red-600{% endif %}">
-                            {% if match.blood_compatible %}✅ Yes{% else %}❌ No{% endif %}
-                        </p>
-                    </div>
+                <!-- Gemini AI Explanation -->
+                {% if match.explanation %}
+                <div class="mt-3 bg-blue-50 border border-blue-100 rounded-lg p-3">
+                    <p class="text-xs font-medium text-blue-700 mb-1">🤖 AI Explanation</p>
+                    <p class="text-sm text-blue-800 break-words">{{ match.explanation }}</p>
                 </div>
-
-                <!-- Organs Matched -->
-                <div class="flex flex-wrap gap-2">
-                    {% for organ in match.organs_matched %}
-                    <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
-                        {{ organ|title }}
-                    </span>
-                    {% endfor %}
-                </div>
+                {% endif %}
             </div>
 
             <!-- Match Score -->
-            <div class="text-center ml-6">
-                <div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-xl
-                    {% if match.final_score >= 80 %}bg-green-500
-                    {% elif match.final_score >= 60 %}bg-yellow-500
-                    {% else %}bg-red-500{% endif %}">
-                    {{ match.final_score|floatformat:0 }}%
-                </div>
-                <p class="text-xs text-gray-500 mt-1">Match Score</p>
+            <div class="text-center flex-shrink-0">
+                    <div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-xl
+                        {% if match.final_score >= 80 %}bg-green-500
+                        {% elif match.final_score >= 60 %}bg-yellow-500
+                        {% else %}bg-red-500{% endif %}">
+                        {{ match.final_score|floatformat:0 }}%
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Match Score</p>
             </div>
-
         </div>
     </div>
     {% endfor %}

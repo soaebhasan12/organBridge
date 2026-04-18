@@ -3,15 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from profiles.models import DonorProfile, RecipientProfile
 from ml_model.matching_algorithm import OrganMatchingEngine
+from ml_model.gemini_explainer import GeminiMatchExplainer
 from .models import OrganMatch, MatchPreference
 
 
 @login_required
 def find_matches(request):
-    """
-    Recipient ke liye ML-based donor matches dhundhta hai.
-    Sirf recipients access kar sakte hain.
-    """
     if not request.user.is_recipient():
         messages.error(request, 'Only recipients can search for matches.')
         return redirect('profiles:profile_dashboard')
@@ -22,7 +19,6 @@ def find_matches(request):
         messages.error(request, 'Please complete your profile first.')
         return redirect('profiles:profile_setup')
 
-    # Available donors fetch karo
     donors = DonorProfile.objects.filter(is_available=True).select_related('user')
 
     if not donors.exists():
@@ -32,14 +28,17 @@ def find_matches(request):
             'message': 'No donors available at the moment.'
         })
 
-    # ML engine se matches nikalo
+    # ML engine
     engine = OrganMatchingEngine()
     matches_data = engine.find_matches(recipient, donors, top_n=10)
 
-    # OrganMatch records create/update karo
+    # Gemini explainer
+    explainer = GeminiMatchExplainer()
+
     formatted_matches = []
     for match in matches_data:
         donor_user = match['donor'].user
+
         organ_match, created = OrganMatch.objects.get_or_create(
             donor=donor_user,
             recipient=request.user,
@@ -53,6 +52,9 @@ def find_matches(request):
             organ_match.organs_matched = match['organs_matched']
             organ_match.save()
 
+        # Gemini explanation
+        explanation = explainer.explain_match(match['donor'], recipient, match)
+
         formatted_matches.append({
             'donor': match['donor'],
             'donor_user': donor_user,
@@ -61,6 +63,7 @@ def find_matches(request):
             'organs_matched': match['organs_matched'],
             'blood_compatible': match['blood_compatible'],
             'match_obj': organ_match,
+            'explanation': explanation,
         })
 
     return render(request, 'matches/find_matches.html', {
@@ -72,9 +75,6 @@ def find_matches(request):
 
 @login_required
 def my_matches(request):
-    """
-    User ke saare matches dikhata hai — donor aur recipient dono ke liye.
-    """
     user = request.user
     if user.is_donor():
         matches = OrganMatch.objects.filter(donor=user).select_related('recipient')
@@ -89,9 +89,6 @@ def my_matches(request):
 
 @login_required
 def update_match_status(request, match_id, status):
-    """
-    Match ko accept ya reject karne ke liye.
-    """
     match = get_object_or_404(OrganMatch, id=match_id)
 
     if request.user not in [match.donor, match.recipient]:
