@@ -4,95 +4,133 @@
 
 {% block content %}
 <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">📊 Bias & Fairness Dashboard</h1>
+    <h1 class="text-3xl font-black text-gray-900">📊 Bias & Fairness Dashboard</h1>
     <p class="text-gray-500 mt-1">AI decision transparency and fairness analysis</p>
 </div>
 
 <!-- Overall Score -->
-<div class="bg-white rounded-xl shadow-sm border p-8 mb-6 text-center">
-    <p class="text-gray-500 text-sm mb-2">Overall Fairness Score</p>
-    <p class="text-7xl font-bold
-        {% if summary.overall_score >= 90 %}text-green-600
-        {% elif summary.overall_score >= 80 %}text-blue-600
-        {% elif summary.overall_score >= 70 %}text-yellow-600
-        {% else %}text-red-600{% endif %}">
-        {{ summary.overall_score }}
-    </p>
-    <p class="text-xl font-medium text-gray-700 mt-2">{{ summary.label }}</p>
-    <p class="text-gray-400 text-sm mt-1">Based on {{ total_matches }} matches analyzed</p>
+<div class="bg-gradient-to-br from-blue-600 to-cyan-500 rounded-2xl p-8 mb-6 text-white text-center">
+    <p class="text-blue-100 text-sm font-semibold uppercase tracking-wide mb-2">Overall Fairness Score</p>
+    <p class="text-8xl font-black">{{ summary.overall_score }}</p>
+    <p class="text-2xl font-bold mt-2">{{ summary.label }}</p>
+    <p class="text-blue-100 text-sm mt-2">Based on {{ total_matches }} matches analyzed</p>
+
+    <!-- Score Bar -->
+    <div class="mt-6 bg-white bg-opacity-20 rounded-full h-3 max-w-sm mx-auto">
+        <div class="bg-white rounded-full h-3 transition-all"
+             style="width: {{ summary.overall_score }}%"></div>
+    </div>
 </div>
 
 <!-- Bias Cards -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
 
     <!-- Gender Bias -->
-    <div class="bg-white rounded-xl shadow-sm border p-6">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="font-semibold text-gray-900">👤 Gender Bias</h3>
-            <span class="px-2 py-1 rounded text-xs font-medium
-                {% if audit_results.gender_bias.status == 'fair' %}bg-green-100 text-green-700
-                {% else %}bg-red-100 text-red-700{% endif %}">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">👤</span>
+                <h3 class="font-bold text-gray-900">Gender Bias</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold
+                {% if audit_results.gender_bias.status == 'fair' %}bg-green-50 text-green-700 border border-green-200
+                {% else %}bg-red-50 text-red-700 border border-red-200{% endif %}">
                 {{ audit_results.gender_bias.status|title }}
             </span>
         </div>
-        <p class="text-4xl font-bold text-gray-900">
+        <p class="text-5xl font-black text-gray-900">
             {{ audit_results.gender_bias.fairness_score }}
-            <span class="text-lg text-gray-400">/100</span>
+            <span class="text-xl text-gray-400 font-medium">/100</span>
         </p>
+        <div class="mt-3 bg-gray-100 rounded-full h-2">
+            <div class="bg-blue-500 rounded-full h-2"
+                 style="width: {{ audit_results.gender_bias.fairness_score }}%"></div>
+        </div>
         {% if audit_results.gender_bias.max_difference %}
-        <p class="text-sm text-gray-500 mt-2">
-            Max difference: {{ audit_results.gender_bias.max_difference }}%
-        </p>
+        <p class="text-xs text-gray-400 mt-2">Max score difference: {{ audit_results.gender_bias.max_difference }}%</p>
         {% endif %}
     </div>
 
     <!-- Age Bias -->
-    <div class="bg-white rounded-xl shadow-sm border p-6">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="font-semibold text-gray-900">🎂 Age Bias</h3>
-            <span class="px-2 py-1 rounded text-xs font-medium
-                {% if audit_results.age_bias.status == 'fair' %}bg-green-100 text-green-700
-                {% else %}bg-red-100 text-red-700{% endif %}">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">🎂</span>
+                <h3 class="font-bold text-gray-900">Age Bias</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold
+                {% if audit_results.age_bias.status == 'fair' %}bg-green-50 text-green-700 border border-green-200
+                {% else %}bg-red-50 text-red-700 border border-red-200{% endif %}">
                 {{ audit_results.age_bias.status|title }}
             </span>
         </div>
-        <p class="text-4xl font-bold text-gray-900">
+        <p class="text-5xl font-black text-gray-900">
             {{ audit_results.age_bias.fairness_score }}
-            <span class="text-lg text-gray-400">/100</span>
+            <span class="text-xl text-gray-400 font-medium">/100</span>
         </p>
+        <div class="mt-3 bg-gray-100 rounded-full h-2">
+            <div class="bg-cyan-500 rounded-full h-2"
+                 style="width: {{ audit_results.age_bias.fairness_score }}%"></div>
+        </div>
         {% if audit_results.age_bias.max_difference %}
-        <p class="text-sm text-gray-500 mt-2">
-            Max difference: {{ audit_results.age_bias.max_difference }}%
-        </p>
+        <p class="text-xs text-gray-400 mt-2">Max score difference: {{ audit_results.age_bias.max_difference }}%</p>
         {% endif %}
     </div>
 
     <!-- Location Bias -->
-    <div class="bg-white rounded-xl shadow-sm border p-6">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="font-semibold text-gray-900">📍 Location Bias</h3>
-            <span class="px-2 py-1 rounded text-xs font-medium
-                {% if audit_results.location_bias.status == 'fair' %}bg-green-100 text-green-700
-                {% else %}bg-red-100 text-red-700{% endif %}">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">📍</span>
+                <h3 class="font-bold text-gray-900">Location Bias</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold
+                {% if audit_results.location_bias.status == 'fair' %}bg-green-50 text-green-700 border border-green-200
+                {% else %}bg-red-50 text-red-700 border border-red-200{% endif %}">
                 {{ audit_results.location_bias.status|title }}
             </span>
         </div>
-        <p class="text-4xl font-bold text-gray-900">
+        <p class="text-5xl font-black text-gray-900">
             {{ audit_results.location_bias.fairness_score }}
-            <span class="text-lg text-gray-400">/100</span>
+            <span class="text-xl text-gray-400 font-medium">/100</span>
         </p>
+        <div class="mt-3 bg-gray-100 rounded-full h-2">
+            <div class="bg-purple-500 rounded-full h-2"
+                 style="width: {{ audit_results.location_bias.fairness_score }}%"></div>
+        </div>
         {% if audit_results.location_bias.max_difference %}
-        <p class="text-sm text-gray-500 mt-2">
-            Max difference: {{ audit_results.location_bias.max_difference }}%
-        </p>
+        <p class="text-xs text-gray-400 mt-2">Max score difference: {{ audit_results.location_bias.max_difference }}%</p>
         {% endif %}
     </div>
 
 </div>
 
+<!-- What This Means -->
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+    <h2 class="text-lg font-bold text-gray-900 mb-4">📖 What These Scores Mean</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+        <div class="flex gap-3">
+            <span class="text-green-500 font-bold">90-100</span>
+            <span>Excellent — No significant bias detected</span>
+        </div>
+        <div class="flex gap-3">
+            <span class="text-blue-500 font-bold">80-89</span>
+            <span>Good — Minor bias, acceptable range</span>
+        </div>
+        <div class="flex gap-3">
+            <span class="text-yellow-500 font-bold">70-79</span>
+            <span>Fair — Some bias present, monitor closely</span>
+        </div>
+        <div class="flex gap-3">
+            <span class="text-red-500 font-bold">&lt;70</span>
+            <span>Biased — Action required to improve fairness</span>
+        </div>
+    </div>
+</div>
+
 {% if total_matches == 0 %}
-<div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-center">
-    <p class="text-yellow-700">No match data available yet. Bias analysis will appear once matches are created.</p>
+<div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-2xl p-6 text-center">
+    <p class="text-yellow-700 font-medium">No match data available yet. Bias analysis will appear once matches are created.</p>
 </div>
 {% endif %}
 

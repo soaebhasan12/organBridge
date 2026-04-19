@@ -4,19 +4,19 @@
 
 {% block content %}
 <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">💌 My Matches</h1>
+    <h1 class="text-3xl font-black text-gray-900">💌 My Matches</h1>
     <p class="text-gray-500 mt-1">Your match history and status</p>
 </div>
 
 {% if matches %}
 <div class="space-y-4">
     {% for match in matches %}
-    <div class="bg-white rounded-xl shadow-sm border p-6">
-        <div class="flex justify-between items-center">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 hover:shadow-md transition">
+        <div class="flex justify-between items-center flex-wrap gap-4">
 
             <!-- Match Info -->
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white font-black text-lg flex-shrink-0">
                     {% if user_type == 'donor' %}
                         {{ match.recipient.username|first|upper }}
                     {% else %}
@@ -24,7 +24,7 @@
                     {% endif %}
                 </div>
                 <div>
-                    <p class="font-semibold text-gray-900">
+                    <p class="font-bold text-gray-900">
                         {% if user_type == 'donor' %}
                             Recipient: {{ match.recipient.username }}
                         {% else %}
@@ -33,42 +33,43 @@
                     </p>
                     <div class="flex flex-wrap gap-1 mt-1">
                         {% for organ in match.organs_matched %}
-                        <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs">
+                        <span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full text-xs font-semibold">
                             {{ organ|title }}
                         </span>
                         {% endfor %}
                     </div>
+                    <p class="text-xs text-gray-400 mt-1">{{ match.created_at|date:"M d, Y" }}</p>
                 </div>
             </div>
 
-            <!-- Score + Status -->
+            <!-- Score + Status + Actions -->
             <div class="flex items-center gap-4">
                 <div class="text-center">
-                    <p class="text-2xl font-bold
-                        {% if match.match_score >= 80 %}text-green-600
-                        {% elif match.match_score >= 60 %}text-yellow-600
-                        {% else %}text-red-600{% endif %}">
+                    <div class="w-14 h-14 rounded-xl flex items-center justify-center text-white font-black text-sm
+                        {% if match.match_score >= 80 %}bg-gradient-to-br from-green-400 to-green-600
+                        {% elif match.match_score >= 60 %}bg-gradient-to-br from-yellow-400 to-orange-500
+                        {% else %}bg-gradient-to-br from-red-400 to-red-600{% endif %}">
                         {{ match.match_score|floatformat:0 }}%
-                    </p>
-                    <p class="text-xs text-gray-500">Score</p>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Score</p>
                 </div>
 
-                <span class="px-3 py-1 rounded-full text-sm font-medium
-                    {% if match.status == 'accepted' %}bg-green-100 text-green-700
-                    {% elif match.status == 'rejected' %}bg-red-100 text-red-700
-                    {% elif match.status == 'expired' %}bg-gray-100 text-gray-700
-                    {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                <span class="px-3 py-1.5 rounded-full text-xs font-bold
+                    {% if match.status == 'accepted' %}bg-green-50 text-green-700 border border-green-200
+                    {% elif match.status == 'rejected' %}bg-red-50 text-red-700 border border-red-200
+                    {% elif match.status == 'expired' %}bg-gray-50 text-gray-500 border border-gray-200
+                    {% else %}bg-yellow-50 text-yellow-700 border border-yellow-200{% endif %}">
                     {{ match.status|title }}
                 </span>
 
                 {% if match.status == 'pending' %}
                 <div class="flex gap-2">
                     <a href="{% url 'matches:update_match_status' match.id 'accepted' %}"
-                       class="bg-green-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-700">
+                       class="bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-green-700 transition">
                         Accept
                     </a>
                     <a href="{% url 'matches:update_match_status' match.id 'rejected' %}"
-                       class="bg-red-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-700">
+                       class="bg-red-50 text-red-600 border border-red-200 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-100 transition">
                         Reject
                     </a>
                 </div>
@@ -81,18 +82,16 @@
 </div>
 
 {% else %}
-<div class="bg-white rounded-xl shadow-sm border p-12 text-center">
-    <p class="text-5xl mb-4">💌</p>
-    <p class="text-gray-500">No matches yet.</p>
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-16 text-center">
+    <p class="text-6xl mb-4">💌</p>
+    <p class="text-xl font-bold text-gray-900 mb-2">No Matches Yet</p>
+    <p class="text-gray-500 mb-6">Start finding compatible donors or wait for match requests.</p>
     {% if user_type == 'recipient' %}
     <a href="{% url 'matches:find_matches' %}"
-       class="mt-4 inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700">
+       class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition">
         Find Matches
     </a>
     {% endif %}
 </div>
 {% endif %}
-
-
-
 {% endblock %}
