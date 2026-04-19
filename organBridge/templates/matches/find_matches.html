@@ -66,13 +66,18 @@
                     </div>
                 </div>
 
-                <!-- Gemini AI Explanation -->
-                {% if match.explanation %}
-                <div class="mt-3 bg-blue-50 border border-blue-100 rounded-lg p-3">
-                    <p class="text-xs font-medium text-blue-700 mb-1">🤖 AI Explanation</p>
-                    <p class="text-sm text-blue-800 break-words">{{ match.explanation }}</p>
+                <!-- AI Explanation Section -->
+                <div class="mt-3" id="explanation-{{ match.match_obj.id }}">
+                    <button 
+                        onclick="getExplanation({{ match.match_obj.id }})"
+                        class="text-sm bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition">
+                        🤖 Generate AI Explanation
+                    </button>
+                    <div id="explanation-text-{{ match.match_obj.id }}" class="hidden mt-2 bg-blue-50 border border-blue-100 rounded-lg p-3">
+                        <p class="text-xs font-medium text-blue-700 mb-1">🤖 AI Explanation</p>
+                        <p class="text-sm text-blue-800 explanation-content"></p>
+                    </div>
                 </div>
-                {% endif %}
             </div>
 
             <!-- Match Score -->
@@ -100,5 +105,28 @@
     </a>
 </div>
 {% endif %}
+
+<script>
+function getExplanation(matchId) {
+    const btn = document.querySelector(`#explanation-${matchId} button`);
+    const textDiv = document.getElementById(`explanation-text-${matchId}`);
+    const content = textDiv.querySelector('.explanation-content');
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Generating...';
+
+    fetch(`/matches/explanation/${matchId}/`)
+        .then(res => res.json())
+        .then(data => {
+            content.textContent = data.explanation;
+            textDiv.classList.remove('hidden');
+            btn.classList.add('hidden');
+        })
+        .catch(err => {
+            btn.textContent = '❌ Failed. Try again.';
+            btn.disabled = false;
+        });
+}
+</script>
 
 {% endblock %}
