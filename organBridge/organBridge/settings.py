@@ -97,3 +97,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
 ML_MODEL_PATH = BASE_DIR / 'ml_model' / 'trained_models'
+
+
+# Production Settings
+import os
+
+# Railway deployment ke liye
+if os.getenv('RAILWAY_ENVIRONMENT'):
+    DEBUG = False
+    ALLOWED_HOSTS = ['*']
+
+    # PostgreSQL database Railway pe
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600
+        )
+    }
+
+    # Static files
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
