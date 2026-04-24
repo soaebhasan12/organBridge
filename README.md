@@ -82,6 +82,57 @@ The matching engine uses two layers of logic:
 
 ---
 
+
+## 🏥 Phase 2 Vision — Hospital Integration
+
+> *This section outlines the planned extension of OrganBridge to involve hospitals as verified intermediaries in the organ matching process.*
+
+### Current Flow
+```
+Donor → OrganBridge → Recipient
+```
+
+### Planned Flow (Phase 2)
+```
+Donor → Hospital (Verified) → OrganBridge AI → Hospital → Recipient
+```
+
+### Planned Features
+
+**Hospital Dashboard**
+Hospitals will have their own verified accounts to manage patients, confirm donor eligibility, track transplant history, and receive real-time match notifications.
+
+**Medical Verification System**
+Every donor and recipient profile will require hospital verification before entering the matching pool — eliminating fake data and increasing match reliability. Each verified profile will carry a Trust Score.
+
+**Transplant Coordination**
+Once a match is accepted, hospitals on both sides will coordinate surgery scheduling, operation theater availability, and inter-hospital organ transfer logistics.
+
+**Cold Chain Tracking**
+Organs have a limited viability window (kidneys: 24-36 hours). Phase 2 will introduce real-time organ tracking from harvest to transplant using Google Maps API — ensuring organs reach recipients before expiry.
+
+**Chain Transplant Support**
+OrganBridge will support paired and chain transplants — where a donor who cannot directly help their loved one triggers a chain of compatible swaps across multiple hospitals, saving multiple lives from a single donation.
+
+**Doctor & Surgeon Portal**
+Doctors will be able to review AI-generated match explanations, add medical notes, request second opinions, and use Gemini AI for surgical risk assessment before approving a transplant.
+
+**Regulatory & Government Integration**
+Phase 2 will integrate with NOTTO (National Organ & Tissue Transplant Organisation) for legal compliance, automated documentation, and government audit trails for every transplant decision.
+
+### Phase 2 Roadmap
+
+| Phase | Timeline | Milestone |
+|---|---|---|
+| Phase 1 | Now ✅ | Donor-Recipient AI Matching + Gemini + Bias Dashboard |
+| Phase 2 | 2 months | Hospital Integration + Medical Verification |
+| Phase 3 | 3 months | NOTTO / Government Integration |
+| Phase 4 | 5 months | Pan-India Deployment |
+
+---
+
+
+
 ## 🏗️ Project Structure
 
 ```
